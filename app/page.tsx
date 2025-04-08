@@ -1,103 +1,273 @@
-import Image from "next/image";
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import Script from 'next/script';
+import $ from 'jquery';
+import './globals.css';
+import Image from 'next/image';
+import RecordPlayer from './components/RecordPlayer';
+import MusicPlayer from './components/MusicPlayer';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const router = useRouter();
+  const navRef = useRef<HTMLDivElement>(null);
+  const dimRef = useRef<HTMLDivElement>(null);
+  const backBtnRef = useRef<HTMLDivElement>(null);
+  const playerRef = useRef<HTMLDivElement>(null);
+  const mainBtnWrapperRef = useRef<HTMLDivElement>(null);
+  const btnPlayRef = useRef<HTMLElement>(null);
+  const btnPauseRef = useRef<HTMLElement>(null);
+  const waveRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+  const [isMounted, setIsMounted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    // Set mounted state immediately
+    setIsMounted(true);
+
+    // Load GSAP and initialize animations
+    const loadScripts = async () => {
+      const gsap = await import('gsap');
+      window.$ = $;
+      window.TweenMax = gsap.TweenMax;
+      window.TimelineMax = gsap.TimelineMax;
+      window.Power2 = gsap.Power2;
+      window.Expo = gsap.Expo;
+      window.Elastic = gsap.Elastic;
+
+      // Reset element states
+      if (waveRef.current) {
+        $(waveRef.current).css({ opacity: 0, scale: 0 });
+      }
+      $('.listen-image').css({ opacity: 0, scale: 0 });
+      $('.recordPlayer').css({ opacity: 0, scale: 0 });
+      if (textRef.current) {
+        $(textRef.current).css({ opacity: 0, y: 100 });
+      }
+
+      // Initialize GSAP animations with a slight delay to ensure elements are ready
+      setTimeout(() => {
+        const tl = new TimelineMax();
+        
+        // Animate listen-image
+        tl.to('.listen-image', 1, {
+          scale: 1,
+          opacity: 1,
+          ease: Elastic.easeOut.config(1, 0.75)
+        })
+        // Animate record player
+        .to('.recordPlayer', 1, {
+          scale: 1,
+          opacity: 1,
+          ease: Elastic.easeOut.config(1, 0.75)
+        })
+        // Animate waves
+        .to(waveRef.current, 1.5, {
+          scale: 1,
+          opacity: 1,
+          ease: Expo.easeOut
+        })
+        .to(textRef.current, 1, {
+          y: 0,
+          opacity: 1,
+          ease: Power2.easeOut
+        }, '-=0.5');
+      }, 100);
+    };
+
+    loadScripts();
+
+    // Cleanup function
+    return () => {
+      setIsMounted(false);
+    };
+  }, []); // Empty dependency array means this runs once on mount
+
+  const handleBurgerClick = () => {
+    if (navRef.current && dimRef.current && backBtnRef.current) {
+      $(navRef.current).fadeIn(300);
+      $(dimRef.current).fadeIn(300);
+      $(backBtnRef.current).fadeIn(300);
+    }
+  };
+
+  const handleBackClick = () => {
+    if (navRef.current && dimRef.current && backBtnRef.current) {
+      $(navRef.current).fadeOut(300);
+      $(dimRef.current).fadeOut(300);
+      $(backBtnRef.current).fadeOut(300);
+    }
+  };
+
+  const handleDimClick = () => {
+    if (navRef.current && dimRef.current && backBtnRef.current && playerRef.current) {
+      $(navRef.current).fadeOut(300);
+      $(dimRef.current).fadeOut(300);
+      $(backBtnRef.current).fadeOut(300);
+      $(playerRef.current).fadeOut(300);
+    }
+  };
+
+  const handlePlayToggle = () => {
+    setIsPlaying(!isPlaying);
+    if (mainBtnWrapperRef.current) {
+      $(mainBtnWrapperRef.current).toggleClass('playing');
+    }
+    // Update mini player state
+    $('.mini-player_btn_wrapper').toggleClass('playing');
+    $('.btn-switch').toggleClass('playing');
+  };
+
+  const handleOpenPlayer = () => {
+    if (playerRef.current && dimRef.current) {
+      $(playerRef.current).fadeIn(300);
+      $(dimRef.current).fadeIn(300);
+    }
+  };
+
+  const handleListItemClick = (e: React.MouseEvent<HTMLLIElement>) => {
+    $('.list_item').removeClass('selected');
+    $(e.currentTarget).addClass('selected');
+  };
+
+  const handleTextClick = () => {
+    if (mainBtnWrapperRef.current) {
+      $(mainBtnWrapperRef.current)
+        .fadeIn(300)
+        .css('display', 'flex');
+      TweenMax.to($(mainBtnWrapperRef.current), 0.3, {
+        scale: 1,
+        opacity: 1,
+        ease: Power2.easeOut
+      });
+    }
+  };
+
+  const handleNavClick = (path: string) => {
+    router.push(path);
+    if (navRef.current && dimRef.current && backBtnRef.current) {
+      $(navRef.current).fadeOut(300);
+      $(dimRef.current).fadeOut(300);
+      $(backBtnRef.current).fadeOut(300);
+    }
+  };
+
+  return (
+    <>
+      {isMounted && <MusicPlayer isPlaying={isPlaying} onPlayToggle={handlePlayToggle} />}
+      <div className="wave-container" ref={waveRef}>
+        <div className="wave -one"></div>
+        <div className="wave -two"></div>
+        <div className="wave -three"></div>
+      </div>
+      <div className="wrapper">
+        <div className="line"></div>
+        <div className="text-wrap">
+          <div className="text" ref={textRef} onClick={handleTextClick}>
+            <img src="/LOGO.png" alt="LISTEN" className="listen-image" />
+            <div className="main-btn_wrapper" ref={mainBtnWrapperRef}>
+              {isMounted && (
+                <>
+                  <i 
+                    className="main-btn fa fa-play" 
+                    aria-hidden="true" 
+                    onClick={handlePlayToggle} 
+                    style={{ display: isPlaying ? 'none' : 'block' }}
+                  />
+                  <i 
+                    className="main-btn fa fa-pause" 
+                    aria-hidden="true" 
+                    onClick={handlePlayToggle} 
+                    style={{ display: isPlaying ? 'block' : 'none' }}
+                  />
+                </>
+              )}
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+        {isMounted && <RecordPlayer />}
+
+        <div className="header">
+          <div className="burger-wrapper" onClick={handleBurgerClick}>
+            <div className="burger"></div>
+          </div>
+          <div className="back_btn" ref={backBtnRef} onClick={handleBackClick}>
+            <div className="circle"></div>
+            <div className="text">Back</div>
+          </div>
+        </div>
+
+        <div className="nav" ref={navRef}>
+          <ul className="nav_main">
+            <li><a className="nav_link" onClick={() => handleNavClick('/')}>Home</a></li>
+            <li><a className="nav_link" onClick={() => handleNavClick('/events')}>Events</a></li>
+          </ul>
+          <div className="nav_divider"></div>
+          <ul className="nav_sub">
+            <li><a className="nav_link" onClick={() => handleNavClick('/about')}>About</a></li>
+            {/* <li><a className="nav_link">Contact</a></li> */}
+          </ul>
+        </div>
+
+        <div className="mini-player">
+          <div className={`mini-player_btn_wrapper ${isPlaying ? 'playing' : ''}`}>
+            {/* <i style={{marginTop: '100px'}}className="btn-open-player fa fa-list" aria-hidden="true" onClick={handleOpenPlayer}></i> */}
+          </div>
+        </div>
+
+        <div className="dim" ref={dimRef} onClick={handleDimClick}></div>
+        <div className="player" id="player" ref={playerRef}>
+          <div className="playback_wrapper">
+            <div className="playback_blur"></div>
+            <div className="playback_thumb"></div>
+            <div className="playback_info">
+              <div className="title">Friday Comes</div>
+              <div className="artist">Early</div>
+            </div>
+            <div className="playback_btn_wrapper">
+              <i className="btn-prev fa fa-step-backward" aria-hidden="true"></i>
+              <div className="btn-switch">
+                <i className="btn-play fa fa-play" aria-hidden="true" onClick={handlePlayToggle}></i>
+                <i className="btn-pause fa fa-pause" aria-hidden="true" onClick={handlePlayToggle}></i>
+              </div>
+              <i className="btn-next fa fa-step-forward" aria-hidden="true"></i>
+            </div>
+            <div className="playback_timeline">
+              <div className="playback_timeline_start-time">00:31</div>
+              <div className="playback_timeline_slider">
+                <div className="slider_base"></div>
+                <div className="slider_progress"></div>
+                <div className="slider_handle"></div>
+              </div>
+              <div className="playback_timeline_end-time">03:11</div>
+            </div>
+          </div>
+
+          <div className="list_wrapper">
+            <ul className="list">
+              <li className="list_item selected" onClick={handleListItemClick}>
+                <div className="thumb"></div>
+                <div className="info">
+                  <div className="title">Friday Comes</div>
+                  <div className="artist">Early</div>
+                </div>
+              </li>
+              <li className="list_item" onClick={handleListItemClick}>
+                <div className="thumb"></div>
+                <div className="info">
+                  <div className="title">Friday Comes</div>
+                  <div className="artist">Early</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {isMounted && <Script src="https://kit.fontawesome.com/a076d05399.js" crossOrigin="anonymous" />}
+    </>
   );
 }

@@ -1,0 +1,142 @@
+.recordPlayer {
+  position: absolute;
+  top: 45%;
+  right: 36%;
+  transform: translate(0, -50%);
+  width: 200px;
+  height: 200px;
+  z-index: -5;
+}
+
+.record {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #333, #111);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  transform-origin: center;
+  z-index: -5;
+}
+
+.recordLabel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #fff, #ddd);
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+  z-index: -5;
+}
+
+.arm {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100px;
+  height: 10px;
+  background: #333;
+  transform-origin: left center;
+  transform: rotate(-30deg);
+}
+
+.needle {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 20px;
+  height: 2px;
+  background: #666;
+  transform: translateY(-50%);
+}
+
+.needle::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  background: #999;
+  border-radius: 50%;
+  transform: translate(50%, -50%);
+}
+
+.frame {
+  &__shine {
+    fill: var(--player-shine);
+  }
+  &__base {
+    fill: var(--player-base);
+  }
+}
+
+.recordBase {
+  fill: var(--record-base);
+}
+
+.record__body {
+  fill: var(--record-body);
+  z-index: -5;
+}
+
+.record__shine {
+  stroke: var(--record-shine);
+  z-index: -5;
+}
+
+.pupil {
+  fill: var(--pupil);
+}
+
+.eye {
+  fill: var(--stroke);
+}
+
+.mouth {
+  &__opening {
+    fill: var(--stroke);
+  }
+  &__tongue {
+    fill: var(--tongue);
+  }
+}
+
+.record__labelBase {
+  fill: var(--record-label-base);
+}
+
+.record__label {
+  fill: var(--record-label);
+  transition: fill 0.25s ease;
+}
+
+.knob {
+  &__shine {
+    fill: var(--record-shine);
+  }
+  &__top {
+    fill: var(--knob-top);
+  }
+  &__base {
+    fill: var(--knob-base);
+  }
+  &__indicator {
+    fill: var(--player-accent);
+  }
+}
+
+.playerArm {
+  &__needle {
+    fill: var(--needle);
+  }
+  &__counter {
+    fill: var(--counter);
+  }
+  &__top {
+    fill: var(--arm-top);
+  }
+} 

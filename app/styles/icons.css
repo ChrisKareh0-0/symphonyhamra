@@ -1,0 +1,34 @@
+@font-face {
+  font-family: 'music-player-icons';
+  src: url('/fonts/music-player-icons.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  font-family: 'music-player-icons' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-play:before {
+  content: "\e900";
+}
+.icon-pause:before {
+  content: "\e901";
+}
+.icon-prev:before {
+  content: "\e902";
+}
+.icon-next:before {
+  content: "\e903";
+}
+.icon-playlist:before {
+  content: "\e904";
+} 

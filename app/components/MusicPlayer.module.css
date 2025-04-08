@@ -1,0 +1,349 @@
+@font-face {
+  font-family: "icomoon";
+  src: url("https://raw.githubusercontent.com/abxlfazl/music-player-widget/main/src/assets/icomoon/fonts/icomoon.eot?u8ckod");
+  src: url("https://raw.githubusercontent.com/abxlfazl/music-player-widget/main/src/assets/icomoon/fonts/icomoon.eot?u8ckod#iefix")
+      format("embedded-opentype"),
+    url("https://raw.githubusercontent.com/abxlfazl/music-player-widget/main/src/assets/icomoon/fonts/icomoon.ttf?u8ckod")
+      format("truetype"),
+    url("https://raw.githubusercontent.com/abxlfazl/music-player-widget/main/src/assets/icomoon/fonts/icomoon.woff?u8ckod")
+      format("woff"),
+    url("https://raw.githubusercontent.com/abxlfazl/music-player-widget/main/src/assets/icomoon/fonts/icomoon.svg?u8ckod#icomoon")
+      format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+  font-family: "icomoon" !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-back:before {
+  content: "\e900";
+  color: #827d7b;
+}
+.icon-next:before {
+  content: "\e901";
+  color: #827d7b;
+}
+.icon-pause:before {
+  content: "\e902";
+  color: #fff;
+}
+.icon-play:before {
+  content: "\e903";
+  color: #fff;
+}
+.icon-playlist:before {
+  content: "\e904";
+  color: #fff;
+}
+
+@font-face {
+  font-family: Avenir;
+  src: url(https://raw.githubusercontent.com/abxlfazl/music-player-widget/main/src/assets/font/AvenirNextRoundedProMedium.TTF);
+}
+
+:root {
+  --duration: 1s;
+  --ease-slider: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-timeline: cubic-bezier(0.71, 0.21, 0.3, 0.95);
+  --circle-size: 15vmin;
+  --color-bg: #FFF;
+  --color-light: #fff9e1;
+  --color-black: #252120;
+  --color-gray: rgb(68, 68, 68);
+  --color-wave-1: rgba(255, 0, 0, 0.8);
+  --color-wave-2: rgba(0, 0, 255, 0.8);
+  --color-white: #fff;
+  --color-gray: #e5e7ea;
+  --color-blue: #78adfe;
+  --color-blue-dark: #5781bd;
+  --box-shadow: 0 2px 6px 1px #0000001f;
+  --color-text-1: #000;
+  --color-text-2: #0000006b;
+  --cover-size: 3.8125em;
+  --border-radius: 1.625em;
+  --music-player-height: 24.375em;
+  --offset-cover: 1.60125em;
+}
+
+.music-player {
+  width: 20.9375em;
+  overflow: hidden;
+  user-select: none;
+  color: var(--color-text-1);
+  height: var(--music-player-height);
+  border-radius: var(--border-radius);
+  background-color: var(--color-white);
+  position: fixed;
+  right: 2.2vw;
+  top: 2.2vw;
+  z-index: 100;
+}
+
+.header {
+  z-index: 1;
+  position: relative;
+  padding: 0.875em 1.375em;
+}
+
+.cover {
+  width: var(--cover-size);
+  height: var(--cover-size);
+  border-radius: 0.3125em;
+}
+
+.cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.music-info {
+  margin-left: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.title {
+  font-size: 0.875em;
+  font-weight: bold;
+  margin-bottom: 0.285714286em;
+}
+
+.artist {
+  font-size: 0.75em;
+  color: var(--color-text-2);
+}
+
+.timeline {
+  padding: 0.875em 1.375em;
+}
+
+.time {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75em;
+  color: var(--color-text-2);
+  margin-bottom: 0.666666667em;
+}
+
+.progress-bar {
+  height: 0.125em;
+  border-radius: 0.0625em;
+  background-color: var(--color-gray);
+  cursor: pointer;
+}
+
+.progress {
+  position: relative;
+  height: 100%;
+  width: 30%;
+  background-color: var(--color-blue);
+  border-radius: inherit;
+}
+
+.pin {
+  --size: 0.375em;
+  width: var(--size);
+  height: var(--size);
+  background-color: var(--color-blue);
+  border-radius: 50%;
+  position: absolute;
+  right: calc(var(--size) / -2);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  padding: 0 1em;
+}
+
+.player-controls {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.toggle-play {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.125em;
+  height: 2.125em;
+  background-color: var(--color-blue);
+  border-radius: 50%;
+  margin: 0 1.375em;
+  cursor: pointer;
+}
+
+.toggle-play:hover {
+  background-color: var(--color-blue-dark);
+}
+
+.btn {
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.btn i {
+  font-size: 1.5em;
+}
+
+.btn-prev i,
+.btn-next i {
+  color: var(--color-text-1);
+}
+
+.btn-toggle-playlist {
+  margin-left: auto;
+}
+
+.btn-toggle-playlist i {
+  color: var(--color-text-1);
+}
+
+.playlist {
+  position: absolute;
+  width: 100%;
+  height: calc(var(--music-player-height) - var(--offset-cover));
+  bottom: calc(var(--offset-cover) * -1);
+  background-color: var(--color-white);
+  border-radius: var(--border-radius);
+  padding: 0.875em 1.375em;
+  transition: transform var(--duration) var(--ease-slider);
+}
+
+.playlist.show {
+  transform: translateY(calc(var(--offset-cover) * -1));
+}
+
+.playlist-header {
+  font-size: 0.875em;
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+
+.playlist-list {
+  overflow: auto;
+  height: calc(100% - 2em);
+}
+
+.playlist-list::-webkit-scrollbar {
+  display: none;
+}
+
+.playlist-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.875em;
+  cursor: pointer;
+}
+
+.playlist-item:last-child {
+  margin-bottom: 0;
+}
+
+.playlist-item.active {
+  color: var(--color-blue);
+}
+
+.playlist-item.active .playlist-song-info .playlist-info-track {
+  color: var(--color-blue);
+}
+
+.playlist-item.active i {
+  display: block;
+}
+
+.playlist-item i {
+  display: none;
+  font-size: 1.125em;
+  margin-right: 0.875em;
+}
+
+.playlist-song-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-right: 0.875em;
+}
+
+.playlist-info-track {
+  font-size: 0.875em;
+  font-weight: bold;
+  margin-bottom: 0.285714286em;
+}
+
+.playlist-info-artist {
+  font-size: 0.75em;
+  color: var(--color-text-2);
+}
+
+.playlist-duration {
+  font-size: 0.875em;
+  font-weight: bold;
+  color: var(--color-text-2);
+}
+
+.slider {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+  z-index: 0;
+}
+
+.slider-content {
+  display: flex;
+  transition: transform var(--duration) var(--ease-slider);
+}
+
+.slider-item {
+  --scale: 0.7;
+  --translateX: -90px;
+  flex: 1 0 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875em;
+  padding-bottom: 40%;
+  filter: grayscale(60%);
+  opacity: 0.5;
+  transition: all var(--duration) var(--ease-slider);
+}
+
+.slider-item.active {
+  --scale: 1.2;
+  --translateX: 0;
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+.slider-item img {
+  --width: 70%;
+  width: var(--width);
+  transform: translateX(var(--translateX)) scale(var(--scale));
+  transition: all var(--duration) var(--ease-slider);
+}
+
+/* Rest of the CSS classes from the original code */
+/* ... Add all the remaining CSS classes here ... */ 
