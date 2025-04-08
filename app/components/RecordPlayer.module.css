@@ -66,12 +66,123 @@
 }
 
 .frame {
-  &__shine {
-    fill: var(--player-shine);
-  }
-  &__base {
-    fill: var(--player-base);
-  }
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.frame__shine {
+  fill: var(--player-shine);
+}
+
+.frame__base {
+  fill: var(--player-base);
+}
+
+.frame__shadow {
+  fill: var(--player-shadow);
+}
+
+.frame__highlight {
+  fill: var(--player-highlight);
+}
+
+.frame__detail {
+  fill: var(--player-detail);
+}
+
+.frame__accent {
+  fill: var(--player-accent);
+}
+
+.frame__disk {
+  fill: var(--player-disk);
+}
+
+.frame__label {
+  fill: var(--player-label);
+}
+
+.frame__arm {
+  fill: var(--player-arm);
+}
+
+.frame__spindle {
+  fill: var(--player-spindle);
+}
+
+.frame__platter {
+  fill: var(--player-platter);
+}
+
+.frame__tonearm {
+  fill: var(--player-tonearm);
+}
+
+.frame__cartridge {
+  fill: var(--player-cartridge);
+}
+
+.frame__stylus {
+  fill: var(--player-stylus);
+}
+
+.frame__counterweight {
+  fill: var(--player-counterweight);
+}
+
+.frame__cueing {
+  fill: var(--player-cueing);
+}
+
+.frame__dustcover {
+  fill: var(--player-dustcover);
+  opacity: 0.5;
+}
+
+.frame__hinges {
+  fill: var(--player-hinges);
+}
+
+.frame__controls {
+  fill: var(--player-controls);
+}
+
+.frame__buttons {
+  fill: var(--player-buttons);
+}
+
+.frame__led {
+  fill: var(--player-led);
+}
+
+.frame__display {
+  fill: var(--player-display);
+}
+
+.frame__text {
+  fill: var(--player-text);
+}
+
+.frame__logo {
+  fill: var(--player-logo);
+}
+
+.frame__feet {
+  fill: var(--player-feet);
+}
+
+.frame__mat {
+  fill: var(--player-mat);
+}
+
+.frame__groove {
+  fill: var(--player-groove);
+}
+
+.frame__reflection {
+  fill: var(--player-reflection);
+  opacity: 0.2;
 }
 
 .recordBase {
@@ -96,13 +207,12 @@
   fill: var(--stroke);
 }
 
-.mouth {
-  &__opening {
-    fill: var(--stroke);
-  }
-  &__tongue {
-    fill: var(--tongue);
-  }
+.mouth__opening {
+  fill: var(--stroke);
+}
+
+.mouth__tongue {
+  fill: var(--tongue);
 }
 
 .record__labelBase {
@@ -114,29 +224,30 @@
   transition: fill 0.25s ease;
 }
 
-.knob {
-  &__shine {
-    fill: var(--record-shine);
-  }
-  &__top {
-    fill: var(--knob-top);
-  }
-  &__base {
-    fill: var(--knob-base);
-  }
-  &__indicator {
-    fill: var(--player-accent);
-  }
+.knob__shine {
+  fill: var(--record-shine);
 }
 
-.playerArm {
-  &__needle {
-    fill: var(--needle);
-  }
-  &__counter {
-    fill: var(--counter);
-  }
-  &__top {
-    fill: var(--arm-top);
-  }
+.knob__top {
+  fill: var(--knob-top);
+}
+
+.knob__base {
+  fill: var(--knob-base);
+}
+
+.knob__indicator {
+  fill: var(--player-accent);
+}
+
+.playerArm__needle {
+  fill: var(--needle);
+}
+
+.playerArm__counter {
+  fill: var(--counter);
+}
+
+.playerArm__top {
+  fill: var(--arm-top);
 } 

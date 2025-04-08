@@ -1,0 +1,40 @@
+.pattern {
+  --circle-size: 10vmin;
+  display: grid;
+  grid-template-columns: repeat(12, calc(var(--circle-size) / 2));
+  grid-template-rows: repeat(18, calc(var(--circle-size) / 2));
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 0;
+  opacity: 0.1;
+}
+
+.circle {
+  position: relative;
+  grid-column: var(--x, 1);
+  grid-row: var(--y, 1);
+  animation: circleAnim 10s calc(-1s * var(--x) * var(--y)) ease-in-out infinite;
+}
+
+.circle:after {
+  content: '';
+  position: absolute;
+  top: calc(var(--circle-size) * -.25);
+  left: calc(var(--circle-size) * -.25);
+  display: block;
+  width: var(--circle-size);
+  height: var(--circle-size);
+  border-radius: var(--circle-size);
+  background: conic-gradient(from var(--r, 0deg), black, transparent 90%);
+  transform: rotate(-.01deg);
+}
+
+@keyframes circleAnim {
+  50% {
+    filter: blur(1px);
+    scale: 1.1;
+    rotate: -1.5deg;
+  }
+} 

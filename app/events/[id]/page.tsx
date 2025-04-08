@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import '../../globals.css';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import styles from './page.module.css';
 
 interface Seat {
   id: string;
@@ -12,175 +12,116 @@ interface Seat {
   status: 'available' | 'selected' | 'booked';
 }
 
-export default function BookingPage({ params }: { params: { id: string } }) {
-  const router = useRouter();
-  const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
-  const [event, setEvent] = useState({
-    id: params.id,
-    title: 'Summer Music Festival',
-    date: 'June 15, 2024',
-    location: 'Central Park',
-    description: 'Join us for a day of amazing music and performances',
-    image: '/event1.jpg',
-    price: {
-      vip: 150,
-      standard: 80,
-      economy: 50
-    }
-  });
+interface Event {
+  id: number;
+  title: string;
+  date: string;
+  location: string;
+  description: string;
+  image: string;
+  seats: Seat[];
+}
 
-  // Initialize seating layout
-  const [seats, setSeats] = useState<Seat[]>(() => {
-    const generateSeats = () => {
-      const seatArray: Seat[] = [];
-      // VIP rows (A-B)
-      for (let row of ['A', 'B']) {
-        for (let i = 1; i <= 10; i++) {
-          seatArray.push({
-            id: `${row}${i}`,
-            row,
-            number: i,
-            price: event.price.vip,
-            status: 'available'
-          });
-        }
-      }
-      // Standard rows (C-F)
-      for (let row of ['C', 'D', 'E', 'F']) {
-        for (let i = 1; i <= 12; i++) {
-          seatArray.push({
-            id: `${row}${i}`,
-            row,
-            number: i,
-            price: event.price.standard,
-            status: 'available'
-          });
-        }
-      }
-      // Economy rows (G-J)
-      for (let row of ['G', 'H', 'I', 'J']) {
-        for (let i = 1; i <= 14; i++) {
-          seatArray.push({
-            id: `${row}${i}`,
-            row,
-            number: i,
-            price: event.price.economy,
-            status: 'available'
-          });
-        }
-      }
-      return seatArray;
+export default function EventPage({ params }: { params: { id: string } }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [event, setEvent] = useState<Event | null>(null);
+  const [seats, setSeats] = useState<Seat[]>([]);
+  const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
+
+  useEffect(() => {
+    const eventData: Event = {
+      id: parseInt(params.id),
+      title: searchParams.get('title') || '',
+      date: searchParams.get('date') || '',
+      location: searchParams.get('location') || '',
+      description: searchParams.get('description') || '',
+      image: searchParams.get('image') || '',
+      seats: Array.from({ length: 100 }, (_, i) => ({
+        id: `seat-${i + 1}`,
+        row: String.fromCharCode(65 + Math.floor(i / 10)),
+        number: (i % 10) + 1,
+        price: 50,
+        status: 'available' as const
+      }))
     };
 
-    return generateSeats();
-  });
+    setEvent(eventData);
+    setSeats(eventData.seats);
+  }, [params.id, searchParams]);
 
-  const handleSeatClick = (seatId: string) => {
-    const seat = seats.find(s => s.id === seatId);
-    if (seat && seat.status !== 'booked') {
-      const newSeats = seats.map(s => {
-        if (s.id === seatId) {
-          return {
-            ...s,
-            status: s.status === 'available' ? 'selected' : 'available'
-          };
-        }
-        return s;
-      });
-      setSeats(newSeats);
-      setSelectedSeats(prev => 
-        prev.includes(seatId) 
-          ? prev.filter(id => id !== seatId)
-          : [...prev, seatId]
-      );
-    }
+  const handleSeatClick = (seat: Seat) => {
+    if (seat.status === 'booked') return;
+
+    const updatedSeats = seats.map(s => {
+      if (s.id === seat.id) {
+        const newStatus: Seat['status'] = s.status === 'available' ? 'selected' : 'available';
+        return {
+          ...s,
+          status: newStatus
+        };
+      }
+      return s;
+    });
+
+    setSeats(updatedSeats);
+    setSelectedSeats(updatedSeats.filter(s => s.status === 'selected'));
   };
 
-  const getTotalPrice = () => {
-    return selectedSeats.reduce((total, seatId) => {
-      const seat = seats.find(s => s.id === seatId);
-      return total + (seat?.price || 0);
-    }, 0);
-  };
+  const totalPrice = selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
+
+  if (!event) {
+    return <div className={styles.container}>Loading...</div>;
+  }
 
   return (
-    <div className="booking-page">
-      <div className="booking-header">
-        <button className="back-button" onClick={() => router.push('/events')}>
-          Back to Events
-        </button>
-        <h1>{event.title}</h1>
-      </div>
+    <div className={styles.container}>
+      <button 
+        className={styles.backButton}
+        onClick={() => router.push('/')}
+      >
+        ← Back to Home
+      </button>
 
-      <div className="event-details">
-        <div className="event-image" style={{ 
-          backgroundImage: `url(${event.image})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          height: '200px'
-        }}></div>
-        <div className="event-info">
-          <p className="event-date">{event.date}</p>
-          <p className="event-location">{event.location}</p>
-          <p className="event-description">{event.description}</p>
+      <div className={styles.eventHeader}>
+        <div 
+          className={styles.eventImage}
+          style={{ backgroundImage: `url(${event.image})` }}
+        />
+        <div className={styles.eventInfo}>
+          <h1>{event.title}</h1>
+          <p>{event.date}</p>
+          <p>{event.location}</p>
+          <p>{event.description}</p>
         </div>
       </div>
 
-      <div className="seating-section">
-        {/* <h2>Select Your Seats</h2>
-        <div className="seating-legend">
-          <div className="legend-item">
-            <div className="seat-demo available"></div>
-            <span>Available</span>
-          </div>
-          <div className="legend-item">
-            <div className="seat-demo selected"></div>
-            <span>Selected</span>
-          </div>
-          <div className="legend-item">
-            <div className="seat-demo booked"></div>
-            <span>Booked</span>
-          </div>
-        </div> */}
-
-        <div className="stage">STAGE</div>
-        
-        <div className="seating-plan">
-          {['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].map(row => (
-            <div key={row} className="seat-row">
-              <div className="row-label">{row}</div>
-              {seats
-                .filter(seat => seat.row === row)
-                .map(seat => (
-                  <div
-                    key={seat.id}
-                    className={`seat ${seat.status}`}
-                    onClick={() => handleSeatClick(seat.id)}
-                  >
-                    {seat.number}
-                  </div>
-                ))}
-            </div>
+      <div className={styles.seatingChart}>
+        <h2>Select Your Seats</h2>
+        <div className={styles.seats}>
+          {seats.map(seat => (
+            <button
+              key={seat.id}
+              className={`${styles.seat} ${styles[seat.status]}`}
+              onClick={() => handleSeatClick(seat)}
+              disabled={seat.status === 'booked'}
+            >
+              {seat.row}{seat.number}
+            </button>
           ))}
         </div>
+      </div>
 
-        <div className="booking-summary">
-          <div className="selected-seats">
-            <h3>Selected Seats:</h3>
-            <p>{selectedSeats.length > 0 ? selectedSeats.join(', ') : 'None'}</p>
-          </div>
-          <div className="total-price">
-            <h3>Total Price:</h3>
-            <p>${getTotalPrice()}</p>
-          </div>
-          <button 
-            className="book-button"
-            disabled={selectedSeats.length === 0}
-            onClick={() => alert('Booking confirmed!')}
-          >
-            Confirm Booking
-          </button>
-        </div>
+      <div className={styles.summary}>
+        <h2>Booking Summary</h2>
+        <p>Selected Seats: {selectedSeats.length}</p>
+        <p>Total Price: ${totalPrice}</p>
+        <button 
+          className={styles.bookButton}
+          disabled={selectedSeats.length === 0}
+        >
+          Confirm Booking
+        </button>
       </div>
     </div>
   );

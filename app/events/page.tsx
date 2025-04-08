@@ -1,97 +1,124 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import '../globals.css';
+import { useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import styles from './page.module.css';
+import CirclePattern from '../components/CirclePattern';
 
-export default function Events() {
+interface Seat {
+  id: string;
+  row: string;
+  number: number;
+  price: number;
+  status: 'available' | 'selected' | 'booked';
+}
+
+interface Event {
+  id: number;
+  title: string;
+  date: string;
+  location: string;
+  description: string;
+  image: string;
+  seats: Seat[];
+}
+
+function EventsContent() {
   const router = useRouter();
-  const [events] = useState([
+  const searchParams = useSearchParams();
+  const [events] = useState<Event[]>([
     {
       id: 1,
-      title: 'Summer Music Festival',
-      date: 'June 15, 2024',
-      location: 'Central Park',
-      description: 'Join us for a day of amazing music and performances',
-      image: '/event1.jpg'
+      title: 'Elden Ring Concert',
+      date: '2024-04-15',
+      location: 'Grand Concert Hall',
+      description: 'Experience the epic soundtrack of Elden Ring performed live by a full orchestra.',
+      image: '/images/elden-ring.jpg',
+      seats: Array.from({ length: 100 }, (_, i) => ({
+        id: `seat-${i + 1}`,
+        row: String.fromCharCode(65 + Math.floor(i / 10)),
+        number: (i % 10) + 1,
+        price: 50,
+        status: 'available' as const
+      }))
     },
     {
       id: 2,
-      title: 'DJ Night',
-      date: 'July 1, 2024',
-      location: 'Club Atmosphere',
-      description: 'Experience the best electronic music with our top DJs',
-      image: '/event2.jpg'
+      title: 'Classical Night',
+      date: '2024-04-20',
+      location: 'Symphony Hall',
+      description: 'An evening of classical masterpieces performed by the city orchestra.',
+      image: '/images/classical.jpg',
+      seats: Array.from({ length: 100 }, (_, i) => ({
+        id: `seat-${i + 1}`,
+        row: String.fromCharCode(65 + Math.floor(i / 10)),
+        number: (i % 10) + 1,
+        price: 40,
+        status: 'available' as const
+      }))
     },
     {
       id: 3,
       title: 'Live Band Concert',
-      date: 'July 15, 2024',
-      location: 'City Arena',
-      description: 'A night of live music featuring local bands',
-      image: '/event3.jpg'
+      date: '2024-09-10',
+      location: 'City Hall',
+      description: 'Experience the best local bands live!',
+      image: '/images/live-band.jpg',
+      seats: Array.from({ length: 100 }, (_, i) => ({
+        id: `seat-${i + 1}`,
+        row: String.fromCharCode(65 + Math.floor(i / 10)),
+        number: (i % 10) + 1,
+        price: 60,
+        status: 'available' as const
+      }))
     }
   ]);
 
+  const handleBookNow = (event: Event) => {
+    const params = new URLSearchParams();
+    params.set('title', event.title);
+    params.set('date', event.date);
+    params.set('location', event.location);
+    params.set('description', event.description);
+    params.set('image', event.image);
+    
+    router.push(`/events/${event.id}?${params.toString()}`);
+  };
+
   return (
-    <div className="events-page">
-      <div className="events-content">
-        <div className="events-header">
-          <button className="back-button" onClick={() => router.push('/')}>
-            Back to Home
-          </button>
-          <h1>Upcoming Events</h1>
-        </div>
-        <div className="events-grid">
-          {events.map((event) => (
-            <div key={event.id} className="event-card">
-              <div className="event-image" style={{ 
-                backgroundImage: `url(${event.image})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                height: '200px'
-              }}></div>
-              <div className="event-content">
-                <h2>{event.title}</h2>
-                <p className="event-date">{event.date}</p>
-                <p className="event-location">{event.location}</p>
-                <p className="event-description">{event.description}</p>
-                <button 
-                  className="event-button"
-                  onClick={() => router.push(`/events/${event.id}`)}
-                >
-                  Book Now
-                </button>
-              </div>
+    <div className={styles.container}>
+      <CirclePattern />
+      <h1>Upcoming Events</h1>
+      <div className={styles.events}>
+        {events.map(event => (
+          <div key={event.id} className={styles.eventCard}>
+            <div 
+              className={styles.eventImage}
+              style={{ backgroundImage: `url(${event.image})` }}
+            />
+            <div className={styles.eventInfo}>
+              <h2>{event.title}</h2>
+              <p>{event.date}</p>
+              <p>{event.location}</p>
+              <p>{event.description}</p>
+              <button 
+                className={styles.bookButton}
+                onClick={() => handleBookNow(event)}
+              >
+                Book Now
+              </button>
             </div>
-          ))}
-        </div>
-      </div>
-      
-      <div className="pattern-container">
-        <span style={{"--x": 5, "--y": 0, "--r": "0deg"} as any}></span>
-        <span style={{"--x": 2, "--y": 2, "--r": "0deg"} as any}></span>
-        <span style={{"--x": 4, "--y": 2, "--r": "0deg"} as any}></span>
-        <span style={{"--x": 6, "--y": 2, "--r": "180deg"} as any}></span>
-        <span style={{"--x": 1, "--y": 3, "--r": "180deg"} as any}></span>
-        <span style={{"--x": 3, "--y": 3, "--r": "0deg"} as any}></span>
-        <span style={{"--x": 5, "--y": 3, "--r": "180deg"} as any}></span>
-        <span style={{"--x": 2, "--y": 4, "--r": "180deg"} as any}></span>
-        <span style={{"--x": 3, "--y": 4, "--r": "0deg"} as any}></span>
-        <span style={{"--x": 5, "--y": 4, "--r": "0deg"} as any}></span>
-        <span style={{"--x": 2, "--y": 5, "--r": "0deg"} as any}></span>
-        <span style={{"--x": 4, "--y": 5, "--r": "180deg"} as any}></span>
-        <span style={{"--x": 6, "--y": 5, "--r": "180deg"} as any}></span>
-        <span style={{"--x": 3, "--y": 6, "--r": "180deg"} as any}></span>
-        <span style={{"--x": 5, "--y": 6, "--r": "180deg"} as any}></span>
-        <span style={{"--x": 2, "--y": 7, "--r": "0deg"} as any}></span>
-        <span style={{"--x": 4, "--y": 7, "--r": "180deg"} as any}></span>
-        <span style={{"--x": 5, "--y": 7, "--r": "0deg"} as any}></span>
-        <span style={{"--x": 3, "--y": 8, "--r": "0deg"} as any}></span>
-        <span style={{"--x": 4, "--y": 8, "--r": "0deg"} as any}></span>
-        <span style={{"--x": 6, "--y": 8, "--r": "180deg"} as any}></span>
-        <span style={{"--x": 5, "--y": 9, "--r": "180deg"} as any}></span>
+          </div>
+        ))}
       </div>
     </div>
+  );
+}
+
+export default function EventsPage() {
+  return (
+    <Suspense fallback={<div className={styles.container}>Loading...</div>}>
+      <EventsContent />
+    </Suspense>
   );
 } 

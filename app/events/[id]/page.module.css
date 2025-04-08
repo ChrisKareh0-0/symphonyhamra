@@ -1,0 +1,136 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+/* f12645 */
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  margin-bottom: 2rem;
+  background: #f12645;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.backButton:hover {
+  background: #f12645;
+}
+
+.eventHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.eventImage {
+  height: 400px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+}
+
+.eventInfo {
+  padding: 1rem;
+}
+
+.eventInfo h1 {
+  margin: 0 0 1rem 0;
+  font-size: 2rem;
+}
+
+.eventInfo p {
+  margin: 0.5rem 0;
+  color: #666;
+}
+
+.seatingChart {
+  margin: 2rem 0;
+}
+
+.seatingChart h2 {
+  margin-bottom: 1rem;
+}
+
+.seats {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.seat {
+  aspect-ratio: 1;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.seat.available {
+  background: white;
+}
+
+.seat.selected {
+  background: #f12645;
+  color: white;
+  border-color: #f12645;
+}
+
+.seat.booked {
+  background: #ccc;
+  color: white;
+  cursor: not-allowed;
+}
+
+.summary {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
+}
+
+.summary h2 {
+  margin: 0 0 1rem 0;
+}
+
+.summary p {
+  margin: 0.5rem 0;
+  color: #666;
+}
+
+.bookButton {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  margin-top: 1rem;
+  background: #f12645;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: background-color 0.2s;
+}
+
+.bookButton:hover {
+  background: #f12645;
+}
+
+.bookButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+} 

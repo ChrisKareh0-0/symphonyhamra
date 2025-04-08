@@ -2,12 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Script from 'next/script';
-import $ from 'jquery';
-import './globals.css';
 import Image from 'next/image';
 import RecordPlayer from './components/RecordPlayer';
 import MusicPlayer from './components/MusicPlayer';
 import { useRouter } from 'next/navigation';
+import './globals.css';
 
 export default function Home() {
   const router = useRouter();
@@ -22,70 +21,82 @@ export default function Home() {
   const textRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [gsapLoaded, setGsapLoaded] = useState(false);
 
   useEffect(() => {
     // Set mounted state immediately
     setIsMounted(true);
 
-    // Load GSAP and initialize animations
-    const loadScripts = async () => {
-      const gsap = await import('gsap');
+    // Import dependencies
+    const loadDependencies = async () => {
+      const [{ default: $ }, gsap] = await Promise.all([
+        import('jquery'),
+        import('gsap')
+      ]);
+      
       window.$ = $;
       window.TweenMax = gsap.TweenMax;
       window.TimelineMax = gsap.TimelineMax;
       window.Power2 = gsap.Power2;
       window.Expo = gsap.Expo;
       window.Elastic = gsap.Elastic;
-
-      // Reset element states
-      if (waveRef.current) {
-        $(waveRef.current).css({ opacity: 0, scale: 0 });
-      }
-      $('.listen-image').css({ opacity: 0, scale: 0 });
-      $('.recordPlayer').css({ opacity: 0, scale: 0 });
-      if (textRef.current) {
-        $(textRef.current).css({ opacity: 0, y: 100 });
-      }
-
-      // Initialize GSAP animations with a slight delay to ensure elements are ready
-      setTimeout(() => {
-        const tl = new TimelineMax();
-        
-        // Animate listen-image
-        tl.to('.listen-image', 1, {
-          scale: 1,
-          opacity: 1,
-          ease: Elastic.easeOut.config(1, 0.75)
-        })
-        // Animate record player
-        .to('.recordPlayer', 1, {
-          scale: 1,
-          opacity: 1,
-          ease: Elastic.easeOut.config(1, 0.75)
-        })
-        // Animate waves
-        .to(waveRef.current, 1.5, {
-          scale: 1,
-          opacity: 1,
-          ease: Expo.easeOut
-        })
-        .to(textRef.current, 1, {
-          y: 0,
-          opacity: 1,
-          ease: Power2.easeOut
-        }, '-=0.5');
-      }, 100);
+      
+      setGsapLoaded(true);
     };
 
-    loadScripts();
+    loadDependencies();
 
-    // Cleanup function
     return () => {
       setIsMounted(false);
+      setGsapLoaded(false);
     };
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
+
+  useEffect(() => {
+    if (!gsapLoaded || !isMounted) return;
+
+    const $ = window.$;
+    const { TweenMax, TimelineMax, Power2, Expo, Elastic } = window;
+
+    // Reset element states
+    if (waveRef.current) {
+      $(waveRef.current).css({ opacity: 0, scale: 0 });
+    }
+    $('.listen-image').css({ opacity: 0, scale: 0 });
+    $('.recordPlayer').css({ opacity: 0, scale: 0 });
+    if (textRef.current) {
+      $(textRef.current).css({ opacity: 0, y: 100 });
+    }
+
+    // Initialize animations
+    const tl = new TimelineMax();
+    
+    tl.to('.listen-image', 1, {
+      scale: 1,
+      opacity: 1,
+      ease: Elastic.easeOut.config(1, 0.75)
+    })
+    .to('.recordPlayer', 1, {
+      scale: 1,
+      opacity: 1,
+      ease: Elastic.easeOut.config(1, 0.75)
+    })
+    .to(waveRef.current, 1.5, {
+      scale: 1,
+      opacity: 1,
+      ease: Expo.easeOut
+    })
+    .to(textRef.current, 1, {
+      y: 0,
+      opacity: 1,
+      ease: Power2.easeOut
+    }, '-=0.5');
+
+  }, [gsapLoaded, isMounted]);
 
   const handleBurgerClick = () => {
+    if (!isMounted || !window.$) return;
+    const $ = window.$;
     if (navRef.current && dimRef.current && backBtnRef.current) {
       $(navRef.current).fadeIn(300);
       $(dimRef.current).fadeIn(300);
@@ -94,6 +105,8 @@ export default function Home() {
   };
 
   const handleBackClick = () => {
+    if (!isMounted || !window.$) return;
+    const $ = window.$;
     if (navRef.current && dimRef.current && backBtnRef.current) {
       $(navRef.current).fadeOut(300);
       $(dimRef.current).fadeOut(300);
@@ -102,6 +115,8 @@ export default function Home() {
   };
 
   const handleDimClick = () => {
+    if (!isMounted || !window.$) return;
+    const $ = window.$;
     if (navRef.current && dimRef.current && backBtnRef.current && playerRef.current) {
       $(navRef.current).fadeOut(300);
       $(dimRef.current).fadeOut(300);
@@ -111,16 +126,19 @@ export default function Home() {
   };
 
   const handlePlayToggle = () => {
+    if (!isMounted || !window.$) return;
+    const $ = window.$;
     setIsPlaying(!isPlaying);
     if (mainBtnWrapperRef.current) {
       $(mainBtnWrapperRef.current).toggleClass('playing');
     }
-    // Update mini player state
     $('.mini-player_btn_wrapper').toggleClass('playing');
     $('.btn-switch').toggleClass('playing');
   };
 
   const handleOpenPlayer = () => {
+    if (!isMounted || !window.$) return;
+    const $ = window.$;
     if (playerRef.current && dimRef.current) {
       $(playerRef.current).fadeIn(300);
       $(dimRef.current).fadeIn(300);
@@ -128,11 +146,16 @@ export default function Home() {
   };
 
   const handleListItemClick = (e: React.MouseEvent<HTMLLIElement>) => {
+    if (!isMounted || !window.$) return;
+    const $ = window.$;
     $('.list_item').removeClass('selected');
     $(e.currentTarget).addClass('selected');
   };
 
   const handleTextClick = () => {
+    if (!isMounted || !window.$ || !window.TweenMax || !window.Power2) return;
+    const $ = window.$;
+    const { TweenMax, Power2 } = window;
     if (mainBtnWrapperRef.current) {
       $(mainBtnWrapperRef.current)
         .fadeIn(300)
@@ -146,6 +169,8 @@ export default function Home() {
   };
 
   const handleNavClick = (path: string) => {
+    if (!isMounted || !window.$) return;
+    const $ = window.$;
     router.push(path);
     if (navRef.current && dimRef.current && backBtnRef.current) {
       $(navRef.current).fadeOut(300);
