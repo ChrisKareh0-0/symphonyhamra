@@ -74,7 +74,7 @@ export default function Home() {
     tl.to('.listen-image', 1, {
       scale: 1,
       opacity: 1,
-      ease: Elastic.easeOut.config(1, 0.75)
+      ease: Elastic.easeOut.config(1, 0.15)
     })
     .to('.recordPlayer', 1, {
       scale: 1,
