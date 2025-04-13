@@ -15,6 +15,7 @@ export default function RecordPlayer() {
   const [isMounted, setIsMounted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showBackButton, setShowBackButton] = useState(false);
+  const [animationComplete, setAnimationComplete] = useState(false);
 
   useEffect(() => {
     window.gsap = gsap;
@@ -25,7 +26,12 @@ export default function RecordPlayer() {
     if (!isMounted) return;
     
     setIsPlaying(true);
-    const tl = window.gsap.timeline();
+    setShowBackButton(true);
+    const tl = window.gsap.timeline({
+      onComplete: () => {
+        setAnimationComplete(true);
+      }
+    });
     
     // Hide listen-image
     tl.to('.listen-image', {
@@ -56,26 +62,36 @@ export default function RecordPlayer() {
       duration: 0.8,
       ease: 'power2.inOut'
     })
-    // Show back button
+    // Show back button with slide-in animation
     .to(`.${styles.backButton}`, {
       opacity: 1,
-      y: 0,
+      x: 0,
       duration: 0.5,
-      ease: 'power2.inOut',
-      onComplete: () => setShowBackButton(true)
-    });
+      ease: 'power2.out'
+    })
+    // Show book now button with slide-in animation
+    .to(`.${styles.bookNowButton}`, {
+      opacity: 1,
+      x: 0,
+      duration: 0.5,
+      ease: 'power2.out'
+    }, '-=0.2');
   };
 
   const handleBackClick = () => {
     if (!isMounted) return;
     
-    setShowBackButton(false);
-    const tl = window.gsap.timeline();
+    const tl = window.gsap.timeline({
+      onComplete: () => {
+        setShowBackButton(false);
+        setIsPlaying(false);
+      }
+    });
     
     // Hide back button
     tl.to(`.${styles.backButton}`, {
       opacity: 0,
-      y: 20,
+      y: -20,
       duration: 0.3,
       ease: 'power2.inOut'
     })
@@ -106,8 +122,49 @@ export default function RecordPlayer() {
       opacity: 1,
       scale: 1,
       duration: 0.5,
-      ease: 'power2.inOut',
-      onComplete: () => setIsPlaying(false)
+      ease: 'power2.inOut'
+    });
+  };
+
+  const handleReset = () => {
+    if (!isMounted) return;
+    
+    const tl = window.gsap.timeline({
+      onComplete: () => {
+        setIsPlaying(false);
+        setShowBackButton(false);
+        setAnimationComplete(false);
+      }
+    });
+    
+    // Reset record player position
+    tl.to(recordRef.current, {
+      top: '45%',
+      right: '36%',
+      xPercent: 0,
+      scale: 1,
+      duration: 0.2,
+      ease: 'power2.inOut'
+    })
+    // Restore background color
+    .to('.wrapper', {
+      backgroundColor: 'var(--color-bg)',
+      duration: 0.5,
+      ease: 'power2.inOut'
+    })
+    // Show waves
+    .to('.wave-container', {
+      opacity: 1,
+      y: 0,
+      duration: 0.5,
+      ease: 'power2.inOut'
+    })
+    // Show listen-image
+    .to('.listen-image', {
+      opacity: 1,
+      scale: 1,
+      duration: 0.2,
+      ease: 'power2.inOut'
     });
   };
 
@@ -133,6 +190,14 @@ export default function RecordPlayer() {
           onClick={handleBackClick}
         >
           Back
+        </button>
+      )}
+      {animationComplete && (
+        <button 
+          className={styles.bookNowButton}
+          onClick={handleReset}
+        >
+          Book Now
         </button>
       )}
     </>

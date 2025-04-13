@@ -5,35 +5,109 @@
   transform: translate(0, -50%);
   width: 300px;
   height: 300px;
+  z-index: 1;
   cursor: pointer;
   transition: none;
   will-change: transform, top, right;
 }
 
+.absoluteImage {
+  position: abso;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 400px;
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+  transition: none;
+  will-change: transform, opacity;
+}
+
 .backButton {
-  position: absolute;
-  /* top: 40px; */
-  margin-top: 5%;
-  right: 20px;
-  padding: 12px 24px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid white;
-  color: white;
+  position: fixed;
+  top: 40px;
+  right: 40px;
+  padding: 15px 30px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #1a472a;
+  color: #1a472a;
   border-radius: 30px;
   font-family: 'Oswald', sans-serif;
-  font-size: 16px;
+  font-weight: bold;
+  font-size: 18px;
   cursor: pointer;
   transition: all 0.3s ease;
   backdrop-filter: blur(5px);
   opacity: 0;
-  transform: translateY(20px);
-  
+  transform: translateX(100px);
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  pointer-events: auto;
+  display: block;
 }
 
 .backButton:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: white;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.resetButton {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  padding: 15px 30px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #1a472a;
+  color: #1a472a;
+  border-radius: 30px;
+  font-family: 'Oswald', sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  opacity: 1;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  pointer-events: auto;
+  display: block;
+}
+
+.resetButton:hover {
+  background: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.bookEvent {
+  position: absolute;
+  top: 0;
+  right: 400px;
+  padding: 15px 30px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #1a472a;
+  color: #1a472a;
+  border-radius: 30px;
+  font-family: 'Oswald', sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  opacity: 1;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  pointer-events: auto;
+  display: block;
+}
+
+.bookEvent:hover {
+  background: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .record {
@@ -46,6 +120,7 @@
   transform-origin: center;
   transition: all 0.2s ease;
   margin-top: 10px;
+  z-index: -5;
 }
 
 .recordLabel {
@@ -62,6 +137,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  z-index: -5;
 }
 
 .recordLabel img {
@@ -85,6 +161,7 @@
     rgba(0, 0, 0, 0.1) 2px,
     rgba(0, 0, 0, 0.1) 4px
   );
+  z-index: 0;
 }
 
 .recordPlayer.playing .record {
@@ -318,4 +395,56 @@
 
 .playerArm__top {
   fill: var(--arm-top);
+}
+
+.bookNowButton {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  padding: 15px 30px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #1a472a;
+  color: #1a472a;
+  border-radius: 30px;
+  font-family: 'Oswald', sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  transform: translateX(100px);
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  pointer-events: auto;
+  display: block;
+}
+
+.bookNowButton:hover {
+  background: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 } 

@@ -4,7 +4,7 @@
   padding: 2rem;
 }
 /* f12645 */
-.backButton {
+/* .backButton {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -21,7 +21,7 @@
 
 .backButton:hover {
   background: #f12645;
-}
+} */
 
 .eventHeader {
   display: grid;

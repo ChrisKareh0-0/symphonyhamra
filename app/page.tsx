@@ -181,6 +181,8 @@ export default function Home() {
 
   return (
     <>
+    <img src="/LOGO.png" alt="LISTEN" className="listen-image" />
+    {isMounted && <RecordPlayer />}
       {isMounted && <MusicPlayer isPlaying={isPlaying} onPlayToggle={handlePlayToggle} />}
       <div className="wave-container" ref={waveRef}>
         <div className="wave -one"></div>
@@ -190,8 +192,8 @@ export default function Home() {
       <div className="wrapper">
         <div className="line"></div>
         <div className="text-wrap">
-          <div className="text" ref={textRef} onClick={handleTextClick}>
-            <img src="/LOGO.png" alt="LISTEN" className="listen-image" />
+          <div className="text" ref={textRef} onClick={handleTextClick}> 
+            
             <div className="main-btn_wrapper" ref={mainBtnWrapperRef}>
               {isMounted && (
                 <>
@@ -210,19 +212,19 @@ export default function Home() {
                 </>
               )}
             </div>
-          </div>
+          </div> 
         </div>
 
-        {isMounted && <RecordPlayer />}
+        
 
         <div className="header">
           <div className="burger-wrapper" onClick={handleBurgerClick}>
             <div className="burger"></div>
           </div>
-          <div className="back_btn" ref={backBtnRef} onClick={handleBackClick}>
+          {/* <div className="back_btn" ref={backBtnRef} onClick={handleBackClick}>
             <div className="circle"></div>
             <div className="text">Back</div>
-          </div>
+          </div> */}
         </div>
 
         <div className="nav" ref={navRef}>

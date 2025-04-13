@@ -45,22 +45,27 @@ a {
 
 body {
   margin: 0;
+  padding: 0;
   background-color: var(--color-bg);
   font-family: 'Oswald', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 1rem;
-  overflow-x: hidden;
+  overflow: hidden;
   width: 100vw;
+  height: 100vh;
+  position: fixed;
 }
 
 .wrapper {
-  position: relative;
-  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
   height: 100vh;
   overflow: hidden;
   background-color: var(--color-bg);
-  transition: background-color 1s ease;
+  transition: background-color 0.5s ease;
 }
 
 .wave-container {
@@ -119,6 +124,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: -10;
 }
 
 .text {
@@ -227,9 +233,9 @@ body {
   font-size: 18px;
   display: flex;
   align-items: center;
-  display: none;
-  opacity: 0;
+  opacity: 1;
   margin-top: 50%;
+  transition: opacity 0.3s ease;
 }
 
 .back_btn .circle {
@@ -770,12 +776,13 @@ body {
   display: block;
   margin: 0 auto;
   position: relative;
-  z-index: 1;
-  border: 4px solid #1a472a;
+  z-index: 5;
+  border: 4px solid #dd0000;
   padding: 10px;
   box-shadow: 0 0 20px rgba(26, 71, 42, 0.3);
   background-color: white;
   transition: all 0.5s ease;
+  margin-top: 15%;
 }
 
 .events-page {
